@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Reviews</title>
+    <style>
+        .review {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="reviews"></div>
+
+    <script>
+        function fetchReviews() {
+            const apiKey = 'AIzaSyBoSZzFs_oyYF80J6QPrQ2iXCpe2ZzBpek';
+            const placeId = 'peaceful-leaf-428500-i4';
+            const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=reviews&key=${apiKey}`;
+
+            // Note: This won't work directly in a browser due to CORS restrictions
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const reviews = data.result.reviews;
+                    const reviewsContainer = document.getElementById('reviews');
+
+                    reviews.forEach(review => {
+                        const reviewDiv = document.createElement('div');
+                        reviewDiv.classList.add('review');
+                        reviewDiv.innerHTML = `
+                            <h3>${review.author_name}</h3>
+                            <p>${review.text}</p>
+                            <p>Rating: ${review.rating}</p>
+                        `;
+                        reviewsContainer.appendChild(reviewDiv);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        fetchReviews();
+    </script>
+</body>
+</html>
